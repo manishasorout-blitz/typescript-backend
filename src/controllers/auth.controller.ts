@@ -12,7 +12,6 @@ export default class AuthController {
   public createUserOnSignup = async (req: any, res: any, next: NextFunction) => {
     try {
       const { first_name: firstName, last_name: lastName, contact_number: contactNumber, email, password }: CreateUserOnSignUpRequestBody = req.body;
-
       await this.authService.createUserOnSignUp({ firstName, lastName, contactNumber, email, password });
       return res.sendformat({ message: 'successully registered' });
     } catch (err) {

@@ -9,15 +9,25 @@ import ValidatorMiddleware from '@/middlewares/validator.middleware';
 // typings validator
 import * as authControllerValdators from '@/controllers/validators/auth.controller.validation';
 
+//bill validator
+import * as billControllerValidator from '@/controllers/validators/bill.controller.validation';
+
+//bill controller
+import BillController from '@/controllers/bill.controller';
+
 class ExternalRoute {
   public path = '/api/v1/platform';
   public router = Router();
   private validatorMiddleware = new ValidatorMiddleware();
   private authController = new AuthController();
+  private billController = new BillController();
 
   constructor() {
     this.initailzeAuthRoutesForSignUp(`${this.path}/auth`);
     this.initailzeAuthRoutesForLogin(`${this.path}/auth`);
+    this.initailzeBillRoutesForCreateBill(`${this.path}/bill`);
+    this.initailzeBillRoutesForGetAllBills(`${this.path}/bill`);
+    this.initailzeBillRoutesForDelete(`${this.path}/bill`);
   }
 
   private initailzeAuthRoutesForSignUp(prefix: string) {
@@ -33,6 +43,22 @@ class ExternalRoute {
       this.validatorMiddleware.validateRequestBody(authControllerValdators.loginUserRequestBodyParse),
       this.authController.loginUser,
     );
+  }
+  private initailzeBillRoutesForCreateBill(prefix: string) {
+    this.router.post(
+      `${prefix}/createbills`,
+      this.validatorMiddleware.validateRequestBody(billControllerValidator.createBillOfUserBodyParser),
+      this.billController.createBillOfUser,
+    );
+  }
+  //getallbills
+  private initailzeBillRoutesForGetAllBills(prefix: string) {
+    this.router.get(`${prefix}/allbills`, this.billController.getAllBillsOfUser);
+  }
+
+  //delete single bill
+  private initailzeBillRoutesForDelete(prefix: string) {
+    this.router.delete(`${prefix}/deletebill/:id`, this.billController.getAllBillsOfUser);
   }
 }
 
